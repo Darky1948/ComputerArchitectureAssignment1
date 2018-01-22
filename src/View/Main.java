@@ -25,11 +25,12 @@ public class Main {
 			Reader reader = new Reader(args[0]);
 			try {
 				Encoding encoding = reader.parseFile();
-				System.out.println(encoding.toString());
 				
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found ! ");
 			}
+			// TODO encoding part 
+			// TODO writting part generating 2 files
 		}
 	}
 
