@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 
 import Model.EnumOperation;
@@ -165,8 +164,7 @@ public class Reader {
 
 		// J-type - op label
 		if (!line.contains(",")) {
-
-            if(line.contains("nop") || line.contains("exit")){
+            if(line.contains("nop")){
                 String op = line.replaceAll("\\s+", "");
 
                 statement.setOperation(EnumOperation.getEnumByLabel(op));
@@ -205,6 +203,7 @@ public class Reader {
 		// Then it can be either I-type or R-type
 		if (line.contains(",")) {
 			// We look first for the operation.
+			line = line.replaceAll("\t","");
 			String[] strs = line.split(",");
 			
 			// Retrieving the operation
@@ -238,18 +237,15 @@ public class Reader {
                     if(string.matches("^[0-9]*$")) {
                         operand.setImmediate(string);
 					}else {
-						if(string.contains("(") && string.contains(")")) {
-							Operand regOp = new Operand();
+						if(string.contains("(") && string.contains(")")) {;
 							String tmp = string.substring(3, string.length() - 1);
-							regOp.setEnumRegister(EnumRegisters.getEnumByLabel(tmp));
-							operands.add(regOp);
-							String immediate = string.substring(0, 1);
+							operand.setEnumRegister(EnumRegisters.getEnumByLabel(tmp));
+							String immediate = string.substring(0, 2);
 							operand.setImmediate(immediate);
 						}else {
 							operand.setEnumRegister(EnumRegisters.getEnumByLabel(string));
 							if(operand.getEnumRegister() == null) {
-								statement.setLabel(string);
-								statement.setLabel(true);
+								operand.setLabel(string);
 							}
 						}
 					}
@@ -270,13 +266,29 @@ public class Reader {
 				oprds.add(strs[1].replaceAll("\\s+", ""));
 				oprds.add(strs[2].replaceAll("\\s+", ""));
 				
-				for (String string : oprds) {
-					Operand operand = new Operand();
-					operand.setEnumRegister(EnumRegisters.getEnumByLabel(string));
-					operands.add(operand);
+				// SLL 
+				if(enumOperation.getLabel().equals("sll")) {
+					for (int i = 0; i < oprds.size(); i++) {
+						Operand operand = new Operand();
+						if(i == 2) { // last value is immediate
+							operand.setImmediate(oprds.get(i));
+						}else {
+							operand.setEnumRegister(EnumRegisters.getEnumByLabel(oprds.get(i)));
+						}
+						operands.add(operand);
+					}
+				}else {
+					
+					for (String string : oprds) {
+						Operand operand = new Operand();
+						operand.setEnumRegister(EnumRegisters.getEnumByLabel(string));
+						operands.add(operand);
+					}
 				}
+				
 				// Set the operands to the instruction
 				statement.setOperands(operands);
+				
 			}
 		}
 

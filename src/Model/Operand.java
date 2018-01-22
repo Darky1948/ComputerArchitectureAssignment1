@@ -5,9 +5,12 @@ public class Operand {
 
 	private EnumRegisters enumRegister;
 	private String immediate;
+	private String label;
 
 	public Operand() {
 		this.enumRegister = null;
+		this.immediate = null;
+		this.setLabel(null);
 	}
 
 	public EnumRegisters getEnumRegister() {
@@ -25,5 +28,24 @@ public class Operand {
 	public void setImmediate(String immediate) {
 		this.immediate = immediate;
 	}
+
+	@Override
+	public String toString() {
+		return "Operand [enumRegister=" + enumRegister.getLabel() + ", immediate=" + immediate + "]";
+	}
+
+	/**
+	 * @return the label
+	 */
+	public String getLabel() {
+		return label;
+	}
+
+	/**
+	 * @param label the label to set
+	 */
+	public void setLabel(String label) {
+		this.label = label;
+	}	
 
 }

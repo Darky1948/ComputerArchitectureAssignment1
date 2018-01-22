@@ -171,5 +171,6 @@ public class Statement {
 	public void setOperands(ArrayList<Operand> operands) {
 		this.operands = operands;
 	}
+
 	
 }

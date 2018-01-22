@@ -19,7 +19,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if(args[0] != null && !args[0].equals("")) {
+		if(args != null) {
 			System.out.println(args[0]);
 			
 			Reader reader = new Reader(args[0]);
