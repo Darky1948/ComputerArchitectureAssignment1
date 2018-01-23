@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import Model.Encoding;
 import Model.EnumOperation;
 import Model.EnumRegisters;
 import Model.Operand;
@@ -134,7 +135,7 @@ public class Reader {
 	 */
 	private Statement isStatement(String line) {
 		Statement statement = new Statement();
-		System.out.println("Statement line " + line);
+		// TODO to remove later System.out.println("Statement line " + line);
 		Integer indexOfColon = null;
 		Integer indexOfHashTag = null;
 

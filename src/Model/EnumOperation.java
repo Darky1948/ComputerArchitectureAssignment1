@@ -2,32 +2,29 @@ package Model;
 
 public enum EnumOperation {
 	
-	ADD("add", "0000", "0x00", "R", "20"),
-	SUB("sub", "0000", "0x00", "R", "22"),
-	AND("and", "0000", "0x00", "R", "24"),
-	OR("or", "0000", "0x00", "R", "25"),
-	NOR("nor", "0000", "0x00", "R", "27"),
-	SLT("slt", "0000", "0x00", "R", "2A"),
-	LW("lw", "100011", "0x23", "I", "NA"), 
-	SW("sw", "101011", "0x2b", "I", "NA"),
-	BEQ("beq", "0000", "0x04", "I", "NA"),
-	ADDI("addi", "8", "0x08", "I", "NA"),
-	SLL("sll", "0000", "0x00", "R", "00"),
-	J("j", "0000", "0x02", "J", "NA"),
-	JR("jr", "0000", "0x00", "R", "08"),
-	NOP("nop", "0000", "0x00000000", "R", "NA");
+	ADD("add", 0L, "R", 0x20L),
+	SUB("sub", 0L, "R", 0x22L),
+	AND("and", 0L, "R", 0X24L),
+	OR("or", 0L, "R", 0X25L),
+	NOR("nor", 0L, "R", 0X27L),
+	SLT("slt", 0L, "R", 0X42L),
+	LW("lw", 35L, "I", 100L), 
+	SW("sw", 43L, "I", 100L),
+	BEQ("beq", 4L, "I", 100L),
+	ADDI("addi", 8L, "I", 100L),
+	SLL("sll", 0L, "R", 100L),
+	J("j", 2L, "J", 100L),
+	JR("jr", 0L, "R", 0x08L),
+	NOP("nop", 0L, "R", 100L);
 
 	private String label;
-	private String value;
-	private String hex;
+	private Long opcode;
 	private String format;
-	private String funct;
+	private Long funct;
 
-	EnumOperation(String label, String value, String hex, String format,
-			String funct) {
+	EnumOperation(String label, Long opcode, String format, Long funct) {
 		this.label = label;
-		this.value = value;
-		this.hex = hex;
+		this.setOpcode(opcode);
 		this.format = format;
 		this.funct = funct;
 	}
@@ -62,35 +59,6 @@ public enum EnumOperation {
 		this.label = label;
 	}
 
-	/**
-	 * @return the value
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * @param value
-	 *            the value to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	/**
-	 * @return the hex
-	 */
-	public String getHex() {
-		return hex;
-	}
-
-	/**
-	 * @param hex
-	 *            the hex to set
-	 */
-	public void setHex(String hex) {
-		this.hex = hex;
-	}
 
 	/**
 	 * @return the format
@@ -110,7 +78,7 @@ public enum EnumOperation {
 	/**
 	 * @return the funct
 	 */
-	public String getFunct() {
+	public Long getFunct() {
 		return funct;
 	}
 
@@ -118,7 +86,21 @@ public enum EnumOperation {
 	 * @param funct
 	 *            the funct to set
 	 */
-	public void setFunct(String funct) {
+	public void setFunct(Long funct) {
 		this.funct = funct;
+	}
+
+	/**
+	 * @return the opcode
+	 */
+	public Long getOpcode() {
+		return opcode;
+	}
+
+	/**
+	 * @param opcode the opcode to set
+	 */
+	public void setOpcode(Long opcode) {
+		this.opcode = opcode;
 	}
 }

@@ -39,17 +39,18 @@ public enum EnumRegisters {
 	 * Represents the opcode.
 	 */
 	private String label;
+	
 	/**
 	 * Represents the corresponding register value.
 	 */
-	private int registerNumber;
+	private long registerNumber;
 	
 	/**
 	 * Enum constructor with these given parameters.
 	 * @param label
 	 * @param registerNumber
 	 */
-	EnumRegisters(String label, int registerNumber) {
+	EnumRegisters(String label, long registerNumber) {
 		this.label = label;
 		this.registerNumber = registerNumber;
 	}
@@ -85,14 +86,14 @@ public enum EnumRegisters {
 	/**
 	 * @return the registerNumber
 	 */
-	public int getRegisterNumber() {
+	public long getRegisterNumber() {
 		return registerNumber;
 	}
 
 	/**
 	 * @param registerNumber the registerNumber to set
 	 */
-	public void setRegisterNumber(int registerNumber) {
+	public void setRegisterNumber(long registerNumber) {
 		this.registerNumber = registerNumber;
 	}
 }

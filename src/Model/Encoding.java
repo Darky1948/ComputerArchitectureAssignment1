@@ -1,9 +1,7 @@
-package Controller;
+package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import Model.Statement;
 
 public class Encoding {
 	
