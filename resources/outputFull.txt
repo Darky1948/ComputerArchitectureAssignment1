@@ -19,4 +19,3 @@
 0x0000002c 0x08000050				j end
 0x00000030 0x1f000000				jr $ra
 0x00000034 0x00000000				end:	no
-NullPointer NullPointer				add $s1, $s2

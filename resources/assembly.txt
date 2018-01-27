@@ -19,4 +19,3 @@ begin:
 		j end
 		jr $ra
 end:	nop
-		add $s1, $s2, a, a

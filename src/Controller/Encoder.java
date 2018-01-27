@@ -167,7 +167,7 @@ public class Encoder {
 				}
 			}
 		}catch (NullPointerException e) {
-			System.out.println("Something went wrong nullpointer exception");
+			System.out.println("Something went wrong nullpointer exception" + e.getStackTrace());
 			this.encodedAddresses.add("NullPointer");
 			this.encodedInstruction.add("NullPointer");
 		}
