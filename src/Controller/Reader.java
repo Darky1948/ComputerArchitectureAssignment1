@@ -62,7 +62,7 @@ public class Reader {
 				boolean isComment = isLineComment(line.replaceAll("\\s+", ""));
 				if(isComment) {
 					statement.setComment(true);
-					statement.setComment(line.replaceAll("\\s+", ""));
+					statement.setComment(line);
 				}
 				
 				// Label alone ?

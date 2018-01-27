@@ -4,9 +4,11 @@
 package View;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import Controller.Encoder;
 import Controller.Reader;
+import Controller.Writter;
 import Model.Encoding;
 
 /**
@@ -28,14 +30,17 @@ public class Main {
 				
 				Encoder encoder = new Encoder();
 				
-				encoder.getEncodedInstruction(encoding);
+				ArrayList<String> encodedInstructions = encoder.getEncodedInstruction(encoding);
+				ArrayList<String> encodedAddresses = encoder.getEncodedAddresses();
 				
-				encoder.showEncodedInstruction();
+				Writter writter = new Writter();
+				
+				writter.writeSmallFile(encodedInstructions);
+				writter.writeFullFile(encodedInstructions, encoding, encodedAddresses);
 				
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found ! ");
 			}
-			// TODO encoding part 
 			// TODO writting part generating 2 files
 		}
 	}

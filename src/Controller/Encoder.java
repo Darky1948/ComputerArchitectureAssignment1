@@ -48,12 +48,15 @@ public class Encoder {
 		ArrayList<Statement> statements = encoding.getStatements();
 		HashMap<String, String> labelAddress = encoding.getLabelAddress();
 		
+		Long addressLineCounter = 0L;
+		
 		for (Statement statement : statements) {
 			String encodedInstr = ""; // String to concat all the computed encoded instruction
 			
 			// comment
 			if(statement.isComment()) {
 				this.encodedInstruction.add(null);
+				this.encodedAddresses.add(null);
 			} else {
 				EnumOperation enumOperation = statement.getOperation();
 				ArrayList<Operand> operands = statement.getOperands();
@@ -69,7 +72,6 @@ public class Encoder {
 						    String label = entry.getKey();
 						    String address = entry.getValue();
 						    
-						    // TODO see how i store the Jump
 						    if(label.equals(statement.getOperands().get(0).getLabel())) {
 						    	encodedInstr += Long.toHexString(opCode + Long.parseLong(address));
 						    }
@@ -148,6 +150,19 @@ public class Encoder {
 					
 					// Add the encoded instruction to the list
 					this.encodedInstruction.add(encodedInstr);
+					
+					String encodedAdr = "0x" + Long.toHexString(addressLineCounter * 4);
+					int pad2 = 10 - encodedAdr.length();
+					if (pad2 > 0) {
+						StringBuilder sb = new StringBuilder(encodedAdr);
+						for (int k = 0; k < pad2; k++) {
+							sb.insert(2, 0);
+						}
+						encodedAdr = sb.toString();
+					}
+					
+					this.encodedAddresses.add(encodedAdr);
+					addressLineCounter++;
 				}
 			}
 		}
