@@ -135,170 +135,174 @@ public class Reader {
 	 */
 	private Statement isStatement(String line) {
 		Statement statement = new Statement();
-		Integer indexOfColon = null;
-		Integer indexOfHashTag = null;
-
-		// Is first position a label ?
-		if (!String.valueOf(line.charAt(0)).equals(" ") && line.contains(":")) {
-			// That means yes
-			indexOfColon = line.indexOf(":");
-			statement.setLabel(line.substring(0, indexOfColon));
-			statement.setLabel(true);
-			labelAddress.put(statement.getLabel(), String.valueOf(parserAdrCounter * 4));
-		}
-
-		// Do we have an optional comment ?
-		if (line.contains("#")) {
-			// That means yes
-			indexOfHashTag = line.indexOf("#");
-			statement.setComment(line.substring(indexOfHashTag, line.length()));
-		}
-
-		// We want only the instruction string
-		if (indexOfColon != null) {
-			line = line.substring(indexOfColon + 1, line.length());
-		}
-		if (indexOfHashTag != null) {
-			line = line.substring(0, indexOfHashTag);
-		}
-
-		// J-type - op label
-		if (!line.contains(",")) {
-            if(line.contains("nop")){
-                String op = line.replaceAll("\\s+", "");
-
-                statement.setOperation(EnumOperation.getEnumByLabel(op));
-                statement.setOperands(null);
-            } else {
-                String[] strs = line.split(" ");
-                strs[0] = strs[0].replaceAll("\t","");
-                String op = strs[0];
-                String label = strs[1];
-
-                // We create operation object and search it by its label
-               EnumOperation enumOperation = EnumOperation.getEnumByLabel(op);
-				// Jump
-                if(enumOperation.getLabel().equals("j")) {
-                    statement.setOperation(enumOperation);
-                    statement.setOperands(null);
-                    // define label operand
-                    ArrayList<Operand> operands = new ArrayList<>();
-                    Operand operand = new Operand();
-                    
-                    operand.setEnumRegister(null);
-                    operand.setLabel(label);
-                    
-                    operands.add(operand);
-                    statement.setOperands(operands);
-                    
-                } // Jump register
-                else {
-                    // Operands
-                	statement.setOperation(enumOperation);
-                    ArrayList<Operand> operands = new ArrayList<>();
-                    Operand operand = new Operand();
-
-                    operand.setEnumRegister(EnumRegisters.getEnumByLabel(label));
-                    operands.add(operand);
-
-                    statement.setOperands(operands);
-                }
-            }
-
-		}
-
-		// Then it can be either I-type or R-type
-		if (line.contains(",")) {
-			// We look first for the operation.
-			line = line.replaceAll("\t","");
-			String[] strs = line.split(",");
-			
-			// Retrieving the operation
-			String[] firstPart = strs[0].split(" ");
-			String op = firstPart[0].replaceAll("\\s+", "");
-			
-			EnumOperation enumOperation = EnumOperation.getEnumByLabel(op);
-			
-			statement.setOperation(enumOperation);
-			
-			// I-Type - op rt rs imm
-			if(enumOperation.getFormat().equals("I")) {
-				ArrayList<Operand> operands = new ArrayList<>();
-				
-				// Retrieving the operands
-				ArrayList<String> oprds = new ArrayList<String>();
-				for (int i = 1; i < firstPart.length; i++) {
-					if(!firstPart[i].equals("")) {
-						oprds.add(firstPart[i].replaceAll("\\s+", ""));
-					}
-				}
-				oprds.add(strs[1].replaceAll("\\s+", ""));
-				
-				if(strs.length == 3) {
-					oprds.add(strs[2].replaceAll("\\s+", ""));
-				}
-				
-				for (String string : oprds) {
-					Operand operand = new Operand();
-					// Check whether it is a immediate value
-                    if(string.matches("^[0-9]*$")) {
-                        operand.setImmediate(string);
-					}else {
-						if(string.contains("(") && string.contains(")")) {;
-							String tmp = string.substring(3, string.length() - 1);
-							operand.setEnumRegister(EnumRegisters.getEnumByLabel(tmp));
-							String immediate = string.substring(0, 2);
-							operand.setImmediate(immediate);
-						}else {
-							operand.setEnumRegister(EnumRegisters.getEnumByLabel(string));
-							if(operand.getEnumRegister() == null) {
-								operand.setLabel(string);
-							}
-						}
-					}
-					// Add it to the operands list
-					operands.add(operand);
-				}
-				// Set the operands to the instruction
-				statement.setOperands(operands);
+		try {
+			Integer indexOfColon = null;
+			Integer indexOfHashTag = null;
+	
+			// Is first position a label ?
+			if (!String.valueOf(line.charAt(0)).equals(" ") && line.contains(":")) {
+				// That means yes
+				indexOfColon = line.indexOf(":");
+				statement.setLabel(line.substring(0, indexOfColon));
+				statement.setLabel(true);
+				labelAddress.put(statement.getLabel(), String.valueOf(parserAdrCounter * 4));
 			}
-			
-			// R-type - op rd rs rt
-			if(enumOperation.getFormat().equals("R")) {
-				ArrayList<Operand> operands = new ArrayList<>();
+	
+			// Do we have an optional comment ?
+			if (line.contains("#")) {
+				// That means yes
+				indexOfHashTag = line.indexOf("#");
+				statement.setComment(line.substring(indexOfHashTag, line.length()));
+			}
+	
+			// We want only the instruction string
+			if (indexOfColon != null) {
+				line = line.substring(indexOfColon + 1, line.length());
+			}
+			if (indexOfHashTag != null) {
+				line = line.substring(0, indexOfHashTag);
+			}
+	
+			// J-type - op label
+			if (!line.contains(",")) {
+	            if(line.contains("nop")){
+	                String op = line.replaceAll("\\s+", "");
+	
+	                statement.setOperation(EnumOperation.getEnumByLabel(op));
+	                statement.setOperands(null);
+	            } else {
+	                String[] strs = line.split(" ");
+	                strs[0] = strs[0].replaceAll("\t","");
+	                String op = strs[0];
+	                String label = strs[1];
+	
+	                // We create operation object and search it by its label
+	               EnumOperation enumOperation = EnumOperation.getEnumByLabel(op);
+					// Jump
+	                if(enumOperation.getLabel().equals("j")) {
+	                    statement.setOperation(enumOperation);
+	                    statement.setOperands(null);
+	                    // define label operand
+	                    ArrayList<Operand> operands = new ArrayList<>();
+	                    Operand operand = new Operand();
+	                    
+	                    operand.setEnumRegister(null);
+	                    operand.setLabel(label);
+	                    
+	                    operands.add(operand);
+	                    statement.setOperands(operands);
+	                    
+	                } // Jump register
+	                else {
+	                    // Operands
+	                	statement.setOperation(enumOperation);
+	                    ArrayList<Operand> operands = new ArrayList<>();
+	                    Operand operand = new Operand();
+	
+	                    operand.setEnumRegister(EnumRegisters.getEnumByLabel(label));
+	                    operands.add(operand);
+	
+	                    statement.setOperands(operands);
+	                }
+	            }
+	
+			}
+	
+			// Then it can be either I-type or R-type
+			if (line.contains(",")) {
+				// We look first for the operation.
+				line = line.replaceAll("\t","");
+				String[] strs = line.split(",");
 				
-				// Retrieving the operands
-				ArrayList<String> oprds = new ArrayList<String>();
-				oprds.add(firstPart[1].replaceAll("\\s+", ""));
-				oprds.add(strs[1].replaceAll("\\s+", ""));
-				oprds.add(strs[2].replaceAll("\\s+", ""));
+				// Retrieving the operation
+				String[] firstPart = strs[0].split(" ");
+				String op = firstPart[0].replaceAll("\\s+", "");
 				
-				// SLL 
-				if(enumOperation.getLabel().equals("sll")) {
-					for (int i = 0; i < oprds.size(); i++) {
-						Operand operand = new Operand();
-						if(i == 2) { // last value is immediate
-							operand.setImmediate(oprds.get(i));
-						}else {
-							operand.setEnumRegister(EnumRegisters.getEnumByLabel(oprds.get(i)));
+				EnumOperation enumOperation = EnumOperation.getEnumByLabel(op);
+				
+				statement.setOperation(enumOperation);
+				
+				// I-Type - op rt rs imm
+				if(enumOperation.getFormat().equals("I")) {
+					ArrayList<Operand> operands = new ArrayList<>();
+					
+					// Retrieving the operands
+					ArrayList<String> oprds = new ArrayList<String>();
+					for (int i = 1; i < firstPart.length; i++) {
+						if(!firstPart[i].equals("")) {
+							oprds.add(firstPart[i].replaceAll("\\s+", ""));
 						}
-						operands.add(operand);
 					}
-				}else {
+					oprds.add(strs[1].replaceAll("\\s+", ""));
+					
+					if(strs.length == 3) {
+						oprds.add(strs[2].replaceAll("\\s+", ""));
+					}
 					
 					for (String string : oprds) {
 						Operand operand = new Operand();
-						operand.setEnumRegister(EnumRegisters.getEnumByLabel(string));
+						// Check whether it is a immediate value
+	                    if(string.matches("^[0-9]*$")) {
+	                        operand.setImmediate(string);
+						}else {
+							if(string.contains("(") && string.contains(")")) {;
+								String tmp = string.substring(3, string.length() - 1);
+								operand.setEnumRegister(EnumRegisters.getEnumByLabel(tmp));
+								String immediate = string.substring(0, 2);
+								operand.setImmediate(immediate);
+							}else {
+								operand.setEnumRegister(EnumRegisters.getEnumByLabel(string));
+								if(operand.getEnumRegister() == null) {
+									operand.setLabel(string);
+								}
+							}
+						}
+						// Add it to the operands list
 						operands.add(operand);
 					}
+					// Set the operands to the instruction
+					statement.setOperands(operands);
 				}
 				
-				// Set the operands to the instruction
-				statement.setOperands(operands);
-				
+				// R-type - op rd rs rt
+				if(enumOperation.getFormat().equals("R")) {
+					ArrayList<Operand> operands = new ArrayList<>();
+					
+					// Retrieving the operands
+					ArrayList<String> oprds = new ArrayList<String>();
+					oprds.add(firstPart[1].replaceAll("\\s+", ""));
+					oprds.add(strs[1].replaceAll("\\s+", ""));
+					oprds.add(strs[2].replaceAll("\\s+", ""));
+					
+					// SLL 
+					if(enumOperation.getLabel().equals("sll")) {
+						for (int i = 0; i < oprds.size(); i++) {
+							Operand operand = new Operand();
+							if(i == 2) { // last value is immediate
+								operand.setImmediate(oprds.get(i));
+							}else {
+								operand.setEnumRegister(EnumRegisters.getEnumByLabel(oprds.get(i)));
+							}
+							operands.add(operand);
+						}
+					}else {
+						
+						for (String string : oprds) {
+							Operand operand = new Operand();
+							operand.setEnumRegister(EnumRegisters.getEnumByLabel(string));
+							operands.add(operand);
+						}
+					}
+					
+					// Set the operands to the instruction
+					statement.setOperands(operands);
+					
+				}
 			}
+			
+		}catch (Exception e) {
+			System.out.println("An error occured " + line);
 		}
-
 		return statement;
 	}
 }
