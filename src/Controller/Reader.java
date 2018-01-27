@@ -135,7 +135,6 @@ public class Reader {
 	 */
 	private Statement isStatement(String line) {
 		Statement statement = new Statement();
-		// TODO to remove later System.out.println("Statement line " + line);
 		Integer indexOfColon = null;
 		Integer indexOfHashTag = null;
 
@@ -180,11 +179,18 @@ public class Reader {
                EnumOperation enumOperation = EnumOperation.getEnumByLabel(op);
 				// Jump
                 if(enumOperation.getLabel().equals("j")) {
-                    // Label
                     statement.setOperation(enumOperation);
                     statement.setOperands(null);
-                    statement.setLabel(true);
-                    statement.setLabel(label);
+                    // define label operand
+                    ArrayList<Operand> operands = new ArrayList<>();
+                    Operand operand = new Operand();
+                    
+                    operand.setEnumRegister(null);
+                    operand.setLabel(label);
+                    
+                    operands.add(operand);
+                    statement.setOperands(operands);
+                    
                 } // Jump register
                 else {
                     // Operands

@@ -124,7 +124,6 @@ public class Encoder {
                             Long rd = operands.get(0).getEnumRegister().getRegisterNumber();
                             Long rs = operands.get(1).getEnumRegister().getRegisterNumber();
                            
-                            System.out.println(enumOperation.getLabel());
                         	if(enumOperation.getLabel().equals("sll")) {
                         		String imm =  operands.get(2).getImmediate();
                         		encodedInstr += Long.toHexString(opCode + (rs << 21)  + Long.parseLong(imm) + funct);
@@ -148,7 +147,6 @@ public class Encoder {
 					}
 					
 					// Add the encoded instruction to the list
-					System.out.println(encodedInstr);
 					this.encodedInstruction.add(encodedInstr);
 				}
 			}
