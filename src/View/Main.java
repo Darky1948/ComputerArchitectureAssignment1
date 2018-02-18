@@ -21,8 +21,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if(args != null) {
-			// TODO to del System.out.println(args[0]);
+		if(args != null && args[0] != null) {
 			
 			Reader reader = new Reader(args[0]);
 			try {
@@ -41,7 +40,6 @@ public class Main {
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found ! ");
 			}
-			// TODO writting part generating 2 files
 		}
 	}
 
