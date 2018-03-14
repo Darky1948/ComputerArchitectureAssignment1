@@ -32,13 +32,7 @@ public class Reader {
 		this.path = pPath;
 		this.labelAddress = new HashMap<>();
 	}
-	/*
-	 * TODO :
-	 * problème avec les immediates 
-	 *  lw $t1, 12($t2) t2 bien set mais pas le immediate
-	 *  addi $s1, $s1, 10 bien set mais pas le immediate 3 operands.
-	 *  beq $t0, $t1, begin rajouter label dans operands.
-	 */
+	
 	/**
 	 * Parse the given file to fill the Statement object according to the specifications (either comments, labels or statement).
 	 * @throws FileNotFoundException
