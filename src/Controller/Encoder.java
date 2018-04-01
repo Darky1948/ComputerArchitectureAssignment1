@@ -85,8 +85,8 @@ public class Encoder {
 	                        String imm = "";
 	                        
 	                        if(statement.getOperands().size() < 3) { // instructions like lw $t1, 12($t2)
-	                            rs += operands.get(0).getEnumRegister().getRegisterNumber();
-	                            rt += operands.get(1).getEnumRegister().getRegisterNumber();
+	                            rs += operands.get(1).getEnumRegister().getRegisterNumber();
+	                            rt += operands.get(0).getEnumRegister().getRegisterNumber();
 	                            imm += operands.get(1).getImmediate();
 	
 	                        }else { 
@@ -100,7 +100,7 @@ public class Encoder {
 									    String address = entry.getValue();
 									    
 									    if(label.equals(operands.get(2).getLabel())) {
-									    	imm += Long.toHexString(opCode + Long.parseLong(address));
+									    	imm += Long.toHexString(Long.parseLong(address));
 									    }
 									}
 									
@@ -128,7 +128,8 @@ public class Encoder {
 	                           
 	                        	if(enumOperation.getLabel().equals("sll")) {
 	                        		String imm =  operands.get(2).getImmediate();
-	                        		encodedInstr += Long.toHexString(opCode + (rs << 21)  + Long.parseLong(imm) + funct);
+//	                        		encodedInstr += Long.toHexString(opCode + (rs << 21)  + Long.parseLong(imm) + funct);
+	                        		encodedInstr += opCode + (rs << 16) + (rd << 11) + (Long.parseLong(imm) << 6) + funct;
 	                        	}else {
 	                        		Long rt = operands.get(2).getEnumRegister().getRegisterNumber();
 	                        		encodedInstr += Long.toHexString(opCode + (rs << 21) + (rt << 16) + (rd << 11) + funct);

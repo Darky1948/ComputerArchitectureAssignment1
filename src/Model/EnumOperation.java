@@ -7,7 +7,7 @@ public enum EnumOperation {
 	AND("and", 0L, "R", 0X24L),
 	OR("or", 0L, "R", 0X25L),
 	NOR("nor", 0L, "R", 0X27L),
-	SLT("slt", 0L, "R", 0X42L),
+	SLT("slt", 0L, "R", 0x2aL),
 	LW("lw", 35L, "I", 100L), 
 	SW("sw", 43L, "I", 100L),
 	BEQ("beq", 4L, "I", 100L),
