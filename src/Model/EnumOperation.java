@@ -12,7 +12,8 @@ public enum EnumOperation {
 	SW("sw", 43L, "I", 100L),
 	BEQ("beq", 4L, "I", 100L),
 	ADDI("addi", 8L, "I", 100L),
-	SLL("sll", 0L, "R", 100L),
+//	SLL("sll", 0L, "R", 100L),
+	SLL("sll", 0L, "R", 0x00L),
 	J("j", 2L, "J", 100L),
 	JR("jr", 0L, "R", 0x08L),
 	NOP("nop", 0L, "R", 100L);

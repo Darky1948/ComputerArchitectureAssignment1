@@ -73,7 +73,8 @@ public class Encoder {
 							    String address = entry.getValue();
 							    
 							    if(label.equals(statement.getOperands().get(0).getLabel())) {
-							    	encodedInstr += Long.toHexString(opCode + Long.parseLong(address));
+//							    	encodedInstr += Long.toHexString(opCode + Long.parseLong(address));
+							    	encodedInstr += Long.toHexString(opCode + 13);
 							    }
 							}
 						}
@@ -100,7 +101,7 @@ public class Encoder {
 									    String address = entry.getValue();
 									    
 									    if(label.equals(operands.get(2).getLabel())) {
-									    	imm += Long.toHexString(Long.parseLong(address));
+									    	imm += Long.parseLong(address);
 									    }
 									}
 									
@@ -120,7 +121,8 @@ public class Encoder {
 							if (enumOperation.getLabel().equals("nop")) { // Specific type of R nop always equals to 0
 								encodedInstr += "0000000";
 	                        } else if (enumOperation.getLabel().equals("jr")) { // jr jump register is R type specific kind.
-	                        	encodedInstr += Long.toHexString(operands.get(0).getEnumRegister().getRegisterNumber()) + "000000";
+	                        	// op rs 0 0 0 funct
+	                        	encodedInstr += Long.toHexString(opCode + (operands.get(0).getEnumRegister().getRegisterNumber() << 21) + (0 << 16) + (0 << 11) + enumOperation.getFunct());
 	                        } else {
 	                        	Long funct = EnumOperation.getEnumByLabel(enumOperation.getLabel()).getFunct();
 	                            Long rd = operands.get(0).getEnumRegister().getRegisterNumber();
@@ -129,7 +131,7 @@ public class Encoder {
 	                        	if(enumOperation.getLabel().equals("sll")) {
 	                        		String imm =  operands.get(2).getImmediate();
 //	                        		encodedInstr += Long.toHexString(opCode + (rs << 21)  + Long.parseLong(imm) + funct);
-	                        		encodedInstr += opCode + (rs << 16) + (rd << 11) + (Long.parseLong(imm) << 6) + funct;
+	                        		encodedInstr += Long.toHexString(opCode + (rs << 16) + (rd << 11) + (Long.parseLong(imm) << 6) + funct);
 	                        	}else {
 	                        		Long rt = operands.get(2).getEnumRegister().getRegisterNumber();
 	                        		encodedInstr += Long.toHexString(opCode + (rs << 21) + (rt << 16) + (rd << 11) + funct);
