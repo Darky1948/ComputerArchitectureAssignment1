@@ -115,9 +115,9 @@ public class Encoder {
 									    }
 									}
 									
-									tmp = ((tmp - Long.valueOf(imm))) * -1;
+									tmp = ((tmp - Long.valueOf(imm)));
 									
-									encodedInstr += Long.toHexString(opCode + (rs << 21) + (rt << 16) + tmp);
+									encodedInstr += Long.toHexString(opCode + (rs << 21) + (rt+1 << 16) + (-tmp));
 									
 								} else { 
 									// instructions like addi $s1, $s1, 10
