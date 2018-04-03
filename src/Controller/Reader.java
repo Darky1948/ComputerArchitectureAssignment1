@@ -24,9 +24,19 @@ public class Reader {
 	private int parserAdrCounter = 0;
 	
 	/**
+	 * Position counter.
+	 */
+	private int positionCounter = 0;
+	
+	/**
 	 * Contains label as key and address as value.
 	 */
 	private HashMap<String, String> labelAddress;
+	
+	/**
+	 * This store the position of the instruction that needs an address. exemple for jump or beq.
+	 */
+	private HashMap<EnumOperation, Long> positionBranch = new HashMap<>();
 	
 	public Reader(String pPath) {
 		this.path = pPath;
@@ -65,7 +75,7 @@ public class Reader {
 					statement.setLabel(true);
 					statement.setLabel(line.replaceAll("\\s+|:", ""));
 					// list to store label and compute its address with program counter
-					labelAddress.put(statement.getLabel(), String.valueOf(this.parserAdrCounter * 4));
+					labelAddress.put(statement.getLabel(), String.valueOf(this.parserAdrCounter));
 				}
 				
 				// Statement
@@ -73,7 +83,7 @@ public class Reader {
 					statement = isStatement(line);
 					
 				}
-				
+				positionCounter++;
 				statements.add(statement);
 			}else{
 				Statement statement = new Statement();
@@ -86,7 +96,7 @@ public class Reader {
 		
 		scanner.close();
 		
-		Encoding encoding = new Encoding(statements, labelAddress);
+		Encoding encoding = new Encoding(statements, labelAddress, positionBranch);
 		
 		return encoding;
 	}
@@ -139,7 +149,7 @@ public class Reader {
 				indexOfColon = line.indexOf(":");
 				statement.setLabel(line.substring(0, indexOfColon));
 				statement.setLabel(true);
-				labelAddress.put(statement.getLabel(), String.valueOf(parserAdrCounter * 4));
+				labelAddress.put(statement.getLabel(), String.valueOf(parserAdrCounter));
 			}
 	
 			// Do we have an optional comment ?
@@ -185,6 +195,7 @@ public class Reader {
 	                    
 	                    operands.add(operand);
 	                    statement.setOperands(operands);
+	                    positionBranch.put(enumOperation, Long.valueOf(positionCounter));
 	                    
 	                } // Jump register
 	                else {
@@ -248,6 +259,7 @@ public class Reader {
 								operand.setEnumRegister(EnumRegisters.getEnumByLabel(string));
 								if(operand.getEnumRegister() == null) {
 									operand.setLabel(string);
+									positionBranch.put(enumOperation, Long.valueOf(positionCounter));
 								}
 							}
 						}

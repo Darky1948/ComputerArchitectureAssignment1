@@ -47,8 +47,10 @@ public class Encoder {
 		
 		ArrayList<Statement> statements = encoding.getStatements();
 		HashMap<String, String> labelAddress = encoding.getLabelAddress();
+		HashMap<EnumOperation, Long> positionBranch = encoding.getPositionBranch();
 		
 		Long addressLineCounter = 0L;
+		Long index = 0L;
 		try {
 			for (Statement statement : statements) {
 				String encodedInstr = ""; // String to concat all the computed encoded instruction
@@ -68,13 +70,11 @@ public class Encoder {
 						// J type
 						if(enumOperation.getFormat().equals("J")) {
 							// Retrieving the label address values
-							for (Map.Entry<String, String> entry : labelAddress.entrySet()) {
-							    String label = entry.getKey();
-							    String address = entry.getValue();
+							for (Map.Entry<EnumOperation, Long> entry : positionBranch.entrySet()) {
+							    EnumOperation eo = entry.getKey();
 							    
-							    if(label.equals(statement.getOperands().get(0).getLabel())) {
-//							    	encodedInstr += Long.toHexString(opCode + Long.parseLong(address));
-							    	encodedInstr += Long.toHexString(opCode + 13);
+							    if(enumOperation.getOpcode().equals(eo.getOpcode())) {
+							    	encodedInstr += Long.toHexString(opCode + entry.getValue());
 							    }
 							}
 						}
@@ -89,7 +89,7 @@ public class Encoder {
 	                            rs += operands.get(1).getEnumRegister().getRegisterNumber();
 	                            rt += operands.get(0).getEnumRegister().getRegisterNumber();
 	                            imm += operands.get(1).getImmediate();
-	
+	                            encodedInstr += Long.toHexString(opCode + (rs << 21) + (rt << 16) + Long.parseLong(imm));
 	                        }else { 
 	                        	 if (operands.get(2).getLabel() != null) { // instructions like beq $t0, $t1, begin
 	                                rs += operands.get(0).getEnumRegister().getRegisterNumber();
@@ -105,15 +105,28 @@ public class Encoder {
 									    }
 									}
 									
-								} else { // instructions like addi $s1, $s1, 10
+									// Compute the number of instructions to jump counted from the instruction after the beq
+									Long tmp = 0L;
+									for (Map.Entry<EnumOperation, Long> entry : positionBranch.entrySet()) {
+									    EnumOperation eo = entry.getKey();
+									    
+									    if(enumOperation.getOpcode().equals(eo.getOpcode())) {
+									    	tmp += entry.getValue();
+									    }
+									}
+									
+									tmp = ((tmp - Long.valueOf(imm))) * -1;
+									
+									encodedInstr += Long.toHexString(opCode + (rs << 21) + (rt << 16) + tmp);
+									
+								} else { 
+									// instructions like addi $s1, $s1, 10
 	                                 rs += operands.get(0).getEnumRegister().getRegisterNumber();
 	                                 rt += operands.get(1).getEnumRegister().getRegisterNumber();
 	                                 imm += operands.get(2).getImmediate();
+	                                 encodedInstr += Long.toHexString(opCode + (rs << 21) + (rt << 16) + Long.parseLong(imm));
 								}
-	
 	                        }
-	                        
-	                        encodedInstr += Long.toHexString(opCode + (rs << 21) + (rt << 16) + Long.parseLong(imm));
 						}
 						
 						// R type
@@ -130,7 +143,6 @@ public class Encoder {
 	                           
 	                        	if(enumOperation.getLabel().equals("sll")) {
 	                        		String imm =  operands.get(2).getImmediate();
-//	                        		encodedInstr += Long.toHexString(opCode + (rs << 21)  + Long.parseLong(imm) + funct);
 	                        		encodedInstr += Long.toHexString(opCode + (rs << 16) + (rd << 11) + (Long.parseLong(imm) << 6) + funct);
 	                        	}else {
 	                        		Long rt = operands.get(2).getEnumRegister().getRegisterNumber();

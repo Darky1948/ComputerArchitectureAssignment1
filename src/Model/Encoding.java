@@ -16,13 +16,20 @@ public class Encoding {
 	private HashMap<String, String> labelAddress;
 	
 	/**
+	 * This store the position of the instruction that needs an address. exemple for jump or beq.
+	 */
+	private HashMap<EnumOperation, Long> positionBranch;
+	
+	/**
 	 * Constructor with these given parameters.
 	 * @param statements
 	 * @param labelAddress
+	 * @param positionBranch
 	 */
-	public Encoding(ArrayList<Statement> statements, HashMap<String, String> labelAddress) {
+	public Encoding(ArrayList<Statement> statements, HashMap<String, String> labelAddress, HashMap<EnumOperation, Long> positionBranch) {
 		this.statements = statements;
 		this.labelAddress = labelAddress;
+		this.positionBranch = positionBranch;
 	}
 
 	/**
@@ -60,6 +67,20 @@ public class Encoding {
 	public String toString() {
 		return "Encoding [statements=" + statements + ", labelAddress="
 				+ labelAddress + "]";
+	}
+
+	/**
+	 * @return the positionBranch
+	 */
+	public HashMap<EnumOperation, Long> getPositionBranch() {
+		return positionBranch;
+	}
+
+	/**
+	 * @param positionBranch the positionBranch to set
+	 */
+	public void setPositionBranch(HashMap<EnumOperation, Long> positionBranch) {
+		this.positionBranch = positionBranch;
 	}
 		
 }
